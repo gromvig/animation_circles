@@ -14,7 +14,7 @@ namespace _2kL_2023_02_09_AnimDblBfr
         private Thread? t = null;
         public bool IsAlive => t == null || t.IsAlive;
         public Size ContainerSize { get; set; }
-
+        private object locker = new();
         public Animator(Size containerSize, int x, int y, int id)
         {
             r = new Rect(75, x, y, id);
@@ -25,7 +25,10 @@ namespace _2kL_2023_02_09_AnimDblBfr
         {
             c = new Circle(r.Diam, r.X, r.Y, r.id);
             ContainerSize = containerSize;
-            List_circles.Add(c);
+            lock (locker) {
+                List_circles.Add(c);
+            }
+            
         }
 
         public void Start(List<Circle> List_circles, Database db)
@@ -44,11 +47,21 @@ namespace _2kL_2023_02_09_AnimDblBfr
                     while ((c.X + c.Diam < ContainerSize.Width) && (c.Y + c.Diam < ContainerSize.Height))
                     {
                         Thread.Sleep(30);
-                        c.Move(dx, dy);
-                        if (compare(c, List_circles,db))
-                            break;
+                        lock (locker)
+                        {
+
+                            c.Move(dx, dy);
+                        
+                            if (compare(c, List_circles, db))
+
+                                break;
+                        }
                     }
-                    List_circles.Remove(c);
+                    lock (locker)
+                    {
+                        List_circles.Remove(c);
+                    }
+                  
                 }
                 if (r != null)
                 {
@@ -63,18 +76,22 @@ namespace _2kL_2023_02_09_AnimDblBfr
         }
         public bool compare(Circle c, List<Circle> List_circles,Database db)
         {
-            foreach (Circle i in List_circles)
-            {
 
-                if ((leng(c, i) <= c.Diam) && (leng(c, i) != 0))
+                foreach (Circle i in List_circles)
                 {
-                    db.update_score(i.id);
-                    return true;
+
+                    if ((leng(c, i) <= c.Diam) && (c.id != i.id))
+                    {
+                        db = new Database("localhost", "postgres", "Imposter.1", "db_circles", false);
+                        db.update_score(i.id);
+                        return true;
 
 
+                    }
                 }
-            }
+            
             return false;
+                
         }
         private static double leng(Circle c, Circle i)
         {

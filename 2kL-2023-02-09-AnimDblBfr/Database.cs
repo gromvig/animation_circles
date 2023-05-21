@@ -16,13 +16,15 @@ namespace _2kL_2023_02_09_AnimDblBfr
             string Host,
             string user,
             string password,
-            string database
+            string database,
             //int Port
+            bool clean_table
             )
         {
             var connString = $"Host={Host};Username={user};Password={password};Database={database}";
             conn = new NpgsqlConnection(connString);
             conn.Open();
+            if ( clean_table )
             table_clean();
 
 

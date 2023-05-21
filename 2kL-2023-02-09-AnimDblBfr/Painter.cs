@@ -60,13 +60,16 @@ namespace _2kL_2023_02_09_AnimDblBfr
                 a.Start(List_circles, db);
                 for (int i = 0; i < 20; i++)
                 {
-                    if (a.r != null)
+                   
+                    
+                      var  b = new Animator(ContainerSize, a.r, List_circles);
+                    lock (locker)
                     {
-                        a = new Animator(ContainerSize, a.r, List_circles);
-                        animators.Add(a);
-                        a.Start(List_circles, db);
-                        Thread.Sleep(1500);
+                        animators.Add(b);
                     }
+                        b.Start(List_circles, db);
+                        Thread.Sleep(1500);
+                    
                 }
             }
 
@@ -85,9 +88,10 @@ namespace _2kL_2023_02_09_AnimDblBfr
                 {
                     while (isAlive)
                     {
-                        animators.RemoveAll(it => !it.IsAlive);
+                        
                         lock (locker)
                         {
+                            animators.RemoveAll(it => !it.IsAlive);
                             if (PaintOnBuffer())
                             {
                                 bg.Render(MainGraphics);

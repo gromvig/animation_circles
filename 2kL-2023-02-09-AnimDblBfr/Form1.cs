@@ -11,7 +11,7 @@ namespace _2kL_2023_02_09_AnimDblBfr
             InitializeComponent();
             p = new Painter(mainPanel.CreateGraphics());
             p.Start();
-            db = new Database("localhost", "postgres", "Imposter.1", "db_circles");
+            db = new Database("localhost", "postgres", "", "db_circles",true);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
