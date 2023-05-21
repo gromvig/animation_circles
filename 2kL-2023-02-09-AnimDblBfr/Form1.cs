@@ -3,17 +3,20 @@ namespace _2kL_2023_02_09_AnimDblBfr
     public partial class Form1 : Form
     {
         private Painter p;
+        private Database db;
         Point click;
+        private int id = 0;
         public Form1()
         {
             InitializeComponent();
             p = new Painter(mainPanel.CreateGraphics());
             p.Start();
+            db = new Database("localhost", "postgres", "Imposter.1", "db_circles");
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            p.AddNew(0, 0);
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -32,7 +35,8 @@ namespace _2kL_2023_02_09_AnimDblBfr
         private void mainPanel_MouseClick(object sender, MouseEventArgs e)
         {
             click = e.Location;
-            p.AddNew(click.X, click.Y);
+            id++;
+            p.AddNew(click.X, click.Y, id,db);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace _2kL_2023_02_09_AnimDblBfr
         private Random r = new();
         private int diam;
         private int x, y;
+        public int id;
+
 
         public int X => x;
         public int Y => y;
@@ -25,12 +27,13 @@ namespace _2kL_2023_02_09_AnimDblBfr
             this.Color = color;
         }
 
-        public Circle(int diam, int x, int y)
+        public Circle(int diam, int x, int y, int id)
         {
             this.diam = diam;
             this.x = x;
             this.y = y;
             this.Color = Color.FromArgb(r.Next(255), r.Next(255), r.Next(255));
+            this.id = id;
         }
 
         public void Move(int dx, int dy)

@@ -1,4 +1,6 @@
-﻿namespace _2kL_2023_02_09_AnimDblBfr
+﻿using System.Collections.Generic;
+
+namespace _2kL_2023_02_09_AnimDblBfr
 {
     public class Painter
     {
@@ -9,6 +11,7 @@
         private Graphics mainGraphics;
         private BufferedGraphics bg;
         private bool isAlive;
+        public List<Circle> List_circles = new();
 
         private volatile int objectsPainted = 0;
         public Thread PainterThread => t;
@@ -47,24 +50,28 @@
             MainGraphics = mainGraphics;
         }
 
-        public void AddNew(int x, int y)
+        public void AddNew(int x, int y, int id, Database db)
         {
             t = new Thread(() =>
             {
-                var a = new Animator(ContainerSize, x, y, false);
+               db.add_rect(id);
+                var a = new Animator(ContainerSize, x, y, id);
                 animators.Add(a);
-                a.Start();
+                a.Start(List_circles, db);
                 for (int i = 0; i < 20; i++)
                 {
-                    a = new Animator(ContainerSize, x, y, true);
-                    animators.Add(a);
-                    a.Start();
-                    Thread.Sleep(1500);
+                    if (a.r != null)
+                    {
+                        a = new Animator(ContainerSize, a.r, List_circles);
+                        animators.Add(a);
+                        a.Start(List_circles, db);
+                        Thread.Sleep(1500);
+                    }
                 }
             }
 
-          
-        ) ;
+
+        );
             t.Start();
 
         }

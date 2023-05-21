@@ -9,30 +9,31 @@ namespace _2kL_2023_02_09_AnimDblBfr
     public class Animator
     {
         private Circle? c;
-        private Rect? r;
+        Random rnd = new Random();
+        public Rect? r;
         private Thread? t = null;
         public bool IsAlive => t == null || t.IsAlive;
         public Size ContainerSize { get; set; }
 
-        public Animator(Size containerSize, int x, int y, bool IsCircle)
+        public Animator(Size containerSize, int x, int y, int id)
         {
-            if (IsCircle)
-            {
-                c = new Circle(75, x, y);
-            } else
-            {
-                r = new Rect(75, x, y);
-            }
+            r = new Rect(75, x, y, id);
             ContainerSize = containerSize;
         }
 
-        public void Start()
+        public Animator(Size containerSize, Rect r, List<Circle> List_circles)
+        {
+            c = new Circle(r.Diam, r.X, r.Y, r.id);
+            ContainerSize = containerSize;
+            List_circles.Add(c);
+        }
+
+        public void Start(List<Circle> List_circles, Database db)
         {
             t = new Thread(() =>
             {
                 if (c != null)
                 {
-                    Random rnd = new Random();
                     int dx = 0;
                     int dy = 0;
                     while (dx == 0 && dy == 0)
@@ -44,7 +45,10 @@ namespace _2kL_2023_02_09_AnimDblBfr
                     {
                         Thread.Sleep(30);
                         c.Move(dx, dy);
+                        if (compare(c, List_circles,db))
+                            break;
                     }
+                    List_circles.Remove(c);
                 }
                 if (r != null)
                 {
@@ -56,6 +60,31 @@ namespace _2kL_2023_02_09_AnimDblBfr
             });
             t.IsBackground = true;
             t.Start();
+        }
+        public bool compare(Circle c, List<Circle> List_circles,Database db)
+        {
+            foreach (Circle i in List_circles)
+            {
+
+                if ((leng(c, i) <= c.Diam) && (leng(c, i) != 0))
+                {
+                    db.update_score(i.id);
+                    return true;
+
+
+                }
+            }
+            return false;
+        }
+        private static double leng(Circle c, Circle i)
+        {
+            int rad = c.Diam / 2;
+            int xc = c.X + rad;
+            int yc = c.Y + rad;
+            int xi = i.X + rad;
+            int yi = i.Y + rad;
+            double length = Math.Sqrt(Math.Pow(xi - xc, 2) + Math.Pow(yi - yc, 2));
+            return (length);
         }
 
         public void PaintCircle(Graphics g)
