@@ -35,54 +35,62 @@ namespace _2kL_2023_02_09_AnimDblBfr
         {
             t = new Thread(() =>
             {
-                if (c != null)
-                {
-                    int dx = 0;
-                    int dy = 0;
-                    while (dx == 0 && dy == 0)
+                try {
+                    if (c != null)
                     {
-                        dx = rnd.Next(-2, 2);
-                        dy = rnd.Next(-2, 2);
-                    }
-                    while ((c.X + c.Diam < ContainerSize.Width) && (c.Y + c.Diam < ContainerSize.Height))
-                    {
-                        Thread.Sleep(30);
+                        int dx = 0;
+                        int dy = 0;
+
+                        while (dx == 0 && dy == 0)
+                        {
+                            dx = rnd.Next(-2, 2);
+                            dy = rnd.Next(-2, 2);
+                        }
+
+                        while ((c.X + c.Diam < ContainerSize.Width) && (c.Y + c.Diam < ContainerSize.Height))
+                        {
+                            Thread.Sleep(30);
+                            lock (locker)
+                            {
+
+                                c.Move(dx, dy);
+
+                                if (compare(c, List_circles, db))
+                                    break;
+
+                            }
+
+                        }
                         lock (locker)
                         {
+                            List_circles.Remove(c);
+                        }
 
-                            c.Move(dx, dy);
-                        
-                            if (compare(c, List_circles, db))
-
-                                break;
+                    }
+                    if (r != null)
+                    {
+                        while (true)
+                        {
+                            Thread.Sleep(30);
                         }
                     }
-                    lock (locker)
-                    {
-                        List_circles.Remove(c);
-                    }
-                  
-                }
-                if (r != null)
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(30);
-                    }
-                }
+                } 
+                catch { }
             });
             t.IsBackground = true;
-            t.Start();
+                t.Start();
+         
+          
         }
         public bool compare(Circle c, List<Circle> List_circles,Database db)
         {
 
-                foreach (Circle i in List_circles)
+                foreach (Circle i  in List_circles)
                 {
 
                     if ((leng(c, i) <= c.Diam) && (c.id != i.id))
                     {
-                        db = new Database("localhost", "postgres", "Imposter.1", "db_circles", false);
+                        db = new Database("localhost", "postgres", "", "db_circles", false);
                         db.update_score(i.id);
                         return true;
 

@@ -1,3 +1,7 @@
+using System.ComponentModel;
+using System.Text;
+using System.Text.RegularExpressions;
+
 namespace _2kL_2023_02_09_AnimDblBfr
 {
     public partial class Form1 : Form
@@ -11,17 +15,31 @@ namespace _2kL_2023_02_09_AnimDblBfr
             InitializeComponent();
             p = new Painter(mainPanel.CreateGraphics());
             p.Start();
-            db = new Database("localhost", "postgres", "", "db_circles",true);
+            db = new Database("localhost", "postgres", "", "db_circles", true);
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            p.Stop();
+            {
+
+
+                List<(int rectangleId, int score)> scores = db.GetScores();
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var score in scores)
+                {
+                    sb.AppendLine($"Rectangle ID: {score.rectangleId}, Score: {score.score}");
+                }
+
+                textBox1.Text = sb.ToString();
+
+
+
+
+            }
         }
 
         private void mainPanel_Resize(object sender, EventArgs e)
@@ -36,7 +54,9 @@ namespace _2kL_2023_02_09_AnimDblBfr
         {
             click = e.Location;
             id++;
-            p.AddNew(click.X, click.Y, id,db);
+            p.AddNew(click.X, click.Y, id, db);
         }
+
+
     }
 }

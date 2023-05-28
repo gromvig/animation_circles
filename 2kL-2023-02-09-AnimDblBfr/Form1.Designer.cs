@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             mainPanel = new Panel();
-            btnStart = new Button();
             button1 = new Button();
+            textBox1 = new TextBox();
             SuspendLayout();
             // 
             // mainPanel
@@ -40,22 +40,10 @@
             mainPanel.Location = new Point(14, 16);
             mainPanel.Margin = new Padding(3, 4, 3, 4);
             mainPanel.Name = "mainPanel";
-            mainPanel.Size = new Size(638, 540);
+            mainPanel.Size = new Size(638, 393);
             mainPanel.TabIndex = 0;
             mainPanel.MouseClick += mainPanel_MouseClick;
             mainPanel.Resize += mainPanel_Resize;
-            // 
-            // btnStart
-            // 
-            btnStart.Anchor = AnchorStyles.Bottom;
-            btnStart.Location = new Point(290, 573);
-            btnStart.Margin = new Padding(3, 4, 3, 4);
-            btnStart.Name = "btnStart";
-            btnStart.Size = new Size(86, 31);
-            btnStart.TabIndex = 1;
-            btnStart.Text = "Старт";
-            btnStart.UseVisualStyleBackColor = true;
-            btnStart.Click += btnStart_Click;
             // 
             // button1
             // 
@@ -69,25 +57,34 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(12, 438);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(640, 128);
+            textBox1.TabIndex = 3;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(665, 620);
+            Controls.Add(textBox1);
             Controls.Add(button1);
-            Controls.Add(btnStart);
             Controls.Add(mainPanel);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(455, 451);
             Name = "Form1";
             Text = "Анимация";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Panel mainPanel;
-        private Button btnStart;
         private Button button1;
+        private TextBox textBox1;
     }
 }
